@@ -24,7 +24,10 @@ static dbt_result_t dimensions(const dbt_sbc_config_t *c,const uint8_t *p,uint16
     if(p[2]>(mode<2?16u:32u)*bands)return DBT_INVALID;
     unsigned bits=blocks*p[2]*(mode<2?channels:1u)+(mode==3?bands:0u);
     unsigned length=4u+bands*channels/2u+(bits+7u)/8u;
-    if(length>DBT_SBC_MAX_FRAME_BYTES || length*8u*c->rate>(channels==1?320000u:512000u)*blocks*bands)return DBT_INVALID;
+    /* No bitrate cap: the A2DP spec's 320/512 kbps figures are recommendations, and high-bitpool
+     * ("SBC XQ") sources legitimately send up to bitpool 250 (~1.5 Mbps at 48 kHz joint stereo).
+     * The bitpool range and the frame-size bound above already limit every buffer. */
+    if(length>DBT_SBC_MAX_FRAME_BYTES)return DBT_INVALID;
     *bytes=(uint16_t)length;return DBT_OK;
 }
 /* Polynomial 0x1d, MSB first. Entry n is the remainder after four zero
