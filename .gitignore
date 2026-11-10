@@ -1,0 +1,9 @@
+# Build output
+build/
+_build/
+# Generated per-project config (sdkconfig.defaults is the source of truth)
+native_bt/pure_sink/sdkconfig
+native_bt/pure_sink/sdkconfig.old
+__pycache__/
+.vscode/
+.idea/
